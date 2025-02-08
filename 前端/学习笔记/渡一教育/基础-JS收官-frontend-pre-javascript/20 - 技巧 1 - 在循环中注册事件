@@ -1,0 +1,282 @@
+# Day 20 - 技巧 1 - 在循环中注册事件
+
+1. 产生一个新的作用域，作用域中有一个变量，值和这一次循环的i相同
+
+```js
+for (var i = 0; i < 3; i++) {
+  // 产生一个新的作用域，作用域中有一个变量，值和这一次循环的i相同
+  help(i);
+}
+
+function help(a) {
+  setTimeout(function () {
+    console.log(a);
+  }, 1000);
+}
+```
+
+优化
+
+```js
+for (var i = 0; i < 3; i++) {
+  // 产生一个新的作用域，作用域中有一个变量，值和这一次循环的i相同
+  (function (i) {
+    setTimeout(function () {
+      console.log(i);
+    }, 1000);
+  })(i);
+}
+```
+
+这是旧的写法。目前常出现于面试题和旧系统。
+
+新写法
+
+```js
+for (let i = 0; i < 3; i++) {
+  // 产生一个新的作用域，作用域中有一个变量，值和这一次循环的i相同
+  setTimeout(function () {
+    console.log(i);
+  }, 1000);
+}
+```
+
+`let` 定义的变量是**块级作用域**
+
+2. 实现点击任何一个按钮能显示它的位置排第几
+
+法一：用事件委托的方式
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>实现点击任何一个按钮能显示它的位置排第几</title>
+  </head>
+  <body>
+    <div class="container">
+      <button>按钮</button>
+      <button>按钮</button>
+      <button>按钮</button>
+      <button>按钮</button>
+      <button>按钮</button>
+      <button>按钮</button>
+      <button>按钮</button>
+      <button>按钮</button>
+      <button>按钮</button>
+      <button>按钮</button>
+    </div>
+
+    <script>
+      var container = document.querySelector(".container");
+
+      /**
+       * 逻辑：
+       * 1. 获取外层的容器
+       * 2. 监听内层点击的元素，检测类型是否为 BUTTON
+       * 3. 查询该 BUTTON 在父元素中排名第几
+       *
+       */
+      container.onclick = function (e) {
+        if (e.target.tagName === "BUTTON") {
+          //   console.log(e.target);
+          var btnsArr = Array.prototype.slice.call(container.children); // 获取父元素的所有子元素
+          //   console.log(btnsArr);
+          var i = btnsArr.indexOf(e.target); // 获取点击元素在父元素的子元素中的下标
+          console.log(i);
+        }
+      };
+    </script>
+  </body>
+</html>
+```
+
+法二：给每个按钮注册事件，但用 let 来定义循环的变量 i。如果用 var 来定义，会出现作用域的问题，详细原理（待补充）
+
+```html
+<script>
+  /**
+   * 逻辑：
+   * 1. 获取所有的按钮元素
+   * 2. 给每个元素都加上监听事件
+   * */
+  var btns = document.querySelectorAll("button");
+  //   console.log(btns);
+
+  for (let i = 0; i < btns.length; i++) {
+    btns[i].onclick = function () {
+      console.log(i);
+    };
+  }
+</script>
+```
+
+法三：使用立即执行函数，但用 var 来定义循环的变量 i
+
+```html
+<script>
+  var btns = document.querySelectorAll("button");
+
+  for (var i = 0; i < btns.length; i++) {
+    (function (a) {
+      btns[a].onclick = function () {
+        console.log(a);
+      };
+    })(i);
+  }
+</script>
+```
+
+**练习：完成小米商城的轮播图 (banner.js)**
+
+```js
+(function () {
+  // 完成横幅区的图片切换
+  // 横幅区数据
+  var datas = [
+    {
+      img: "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/15c05b32cf948b594477dfc3eb69fb69.jpg?w=2452&h=920",
+      link: "https://www.mi.com/mi11le-5g-ne"
+    },
+    {
+      img: "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/a532e33470d046b3f044d5ea49fc5e9e.png?thumb=1&w=2452&h=920&f=webp&q=90",
+      link: "https://www.mi.com/xiaomipad5"
+    },
+    {
+      img: "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/918820682e4a490221cfd92b24c14b86.jpg?thumb=1&w=2452&h=920&f=webp&q=90",
+      link: "https://www.mi.com/a/h/22033.html?sign=b60a6ca9167bce2d1ed8ee319cf83c75"
+    },
+    {
+      img: "https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/af7be8f65065f405f57f46a02731f78d.jpg?thumb=1&w=2452&h=920&f=webp&q=90",
+      link: "https://www.mi.com/a/h/22812.html?sign=aab397a7ecf2ae4c1765e9d11fdccca6"
+    }
+  ];
+
+  /**
+   * 需要完成以下事情：
+   * 1. 动态更新图片的超链接以及图片的路径地址  不停切换
+   * 2. 动态生成小点点个数  只需做一次
+   * 3. 动态的根据所切换的图片下标，设置对应的小点点激活状态  不停切换
+   */
+
+  // 简化代码
+  function $(selector) {
+    return document.querySelector(selector);
+  }
+
+  // 需要的 dom 元素
+  var bannerContainer = $(".banner.container");
+  var bannerDots = $(".banner-dots");
+  var bannerCoverA = $(".banner-cover");
+  var bannerCoverImg = bannerCoverA.querySelector("img");
+  var btnLeft = $(".banner-pointer-left");
+  var btnRight = $(".banner-pointer-right");
+
+  // 初始化：仅需做一次的
+  function init() {
+    for (var i = 0; i < datas.length; i++) {
+      var span = document.createElement("span");
+      span.className = "fl";
+      bannerDots.appendChild(span);
+    }
+
+    // 初始化第一张图片
+    change(0);
+  }
+
+  init();
+  /**
+   * 将指定下标的元素显示到界面上
+   * @param {number} index 要设置的数据索引
+   */
+  function change(index) {
+    var d = datas[index];
+
+    bannerCoverA.href = d.link;
+    bannerCoverImg.src = d.img;
+
+    // console.log(bannerDots.children[index]);
+
+    // 移除掉之前已经激活的 span 元素的样式
+    var selectedDom = bannerDots.querySelector(".banner-dots-selected");
+    if (selectedDom) {
+      selectedDom.className = "fl";
+    }
+
+    // 激活目前正在显示的 span 元素的样式
+    var activeDom = bannerDots.children[index];
+    activeDom.className = "banner-dots-selected fl";
+  }
+
+  var currentIndex = 0; // 当前显示的是 第几张
+
+  /**
+   * 向前翻
+   */
+  function toPrev() {
+    currentIndex--;
+    if (currentIndex < 0) {
+      currentIndex = datas.length - 1;
+    }
+    change(currentIndex);
+  }
+
+  /**
+   * 向后翻
+   */
+  function toNext() {
+    currentIndex++;
+    if (currentIndex > datas.length - 1) {
+      currentIndex = 0;
+    }
+    change(currentIndex);
+  }
+
+  // 注册事件
+  btnLeft.onclick = toPrev;
+  btnRight.onclick = toNext;
+
+  // 下面的小点点
+  for (let i = 0; i < bannerDots.children.length; i++) {
+    // var span = bannerDots.children[i];
+    // span.onclick = function () {
+    //   currentIndex = i;
+    //   change(i);
+    // };
+
+    // 或者使用立即执行函数
+    (function (i) {
+      var span = bannerDots.children[i];
+      span.onclick = function () {
+        currentIndex = i;
+        change(i);
+      };
+    })(i);
+  }
+
+  // 自动播放
+  var timeId;
+
+  function start() {
+    if (timeId) {
+      return;
+    }
+    timeId = setInterval(toNext, 1500);
+  }
+
+  function stop() {
+    clearInterval(timeId);
+    timeId = null;
+  }
+
+  start(); // 开始自动播放
+
+  // 鼠标浮动上去自动停止，移出自动开始
+  bannerContainer.addEventListener("mouseenter", stop);
+  bannerContainer.addEventListener("mouseleave", start);
+})(); // 使用立即执行函数，避免全局污染
+```
+
+![练习-小米商城轮播图](https://img.hoocode.com/i/2024/11/13/10pxy4k.gif)
