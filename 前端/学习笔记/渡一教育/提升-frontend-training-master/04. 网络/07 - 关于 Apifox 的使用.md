@@ -14,7 +14,7 @@ https://www.apifox.com/
 
 安装完毕后，自己注册一个账号，然后找班班拉你进入【渡一接口文档】团队，进入团队之后，你就能看到对应的接口文档
 
-![image-20230328143307589](https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2023-03-28-063308.png)
+![apifox-1](https://img.hoocode.com/i/2025/02/10/gtpncu.webp)
 
 
 
@@ -27,7 +27,7 @@ https://www.apifox.com/
   - 比如【网络课程接口文档】，能够直接在 apifox 发送请求拿到数据
   - 回头你在你自己的项目中，发送请求时直接输血该地址即可
 
-  ![image-20230328143530485](https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2023-03-28-063530.png)
+  ![apifox-2](https://img.hoocode.com/i/2025/02/10/gtpvx0.webp)
 
 - 还有一种是没有办法直接通过 apifox 发请求拿到数据的
 
@@ -35,14 +35,14 @@ https://www.apifox.com/
   - 这些项目的服务器在对应的课件中是能够拿到的
   - 回头需要你自己在本地启动对应项目的服务器
 
-  ![image-20230328143804833](https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2023-03-28-063805.png)
+  ![apifox-3](https://img.hoocode.com/i/2025/02/10/gtq836.webp)
 
   -  另外，针对这种类型的接口，如果没有启动本地的服务器，但是我们又想要快速的看一下响应对应有哪些字段，可以通过 mock 的形式
 
-  ![image-20230328144228059](https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2023-03-28-064228.png)
+  ![apifox-4](https://img.hoocode.com/i/2025/02/10/gtqs9j.webp)
 
   - 当我们点击【快捷请求】后，对应的效果如下：
 
-  ![image-20230328144336624](https://xiejie-typora.oss-cn-chengdu.aliyuncs.com/2023-03-28-064336.png)
+  ![apifox-5](https://img.hoocode.com/i/2025/02/10/gtr61g.webp)
 
 
