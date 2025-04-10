@@ -5,6 +5,11 @@
 $ ssh-keygen -t rsa -C "youremail@example.com"
 ```
 
+## 测试SSH Key配对成功
+```shell
+$ ssh -T git@gitee.com
+```
+
 ## 配置用户信息
 ```shell
 $ git config --global user.name "Your Name"             
